@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://laszlohegedus.com/</loc>
+         <lastmod>2021-07-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://laszlohegedus.com/blog/</loc>
+         <lastmod>2021-07-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://laszlohegedus.com/blog/01_consuming_and_processing_rabbitmq_messages_with_broadway/</loc>
+         <lastmod>2021-07-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+</urlset>
