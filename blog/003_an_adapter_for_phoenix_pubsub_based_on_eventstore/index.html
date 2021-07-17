@@ -1,0 +1,553 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://laszlohegedus.com/blog/003_an_adapter_for_phoenix_pubsub_based_on_eventstore/">
+      
+      <link rel="icon" href="../../images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.10">
+    
+    
+      
+        <title>An adapter for Phoenix Pubsub based on EventStore - László Hegedüs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.1fe995fd.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.f1a3b89f.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../css/prism.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#an-adapter-for-phoenix-pubsub-based-on-eventstore" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="László Hegedüs" class="md-header__button md-logo" aria-label="László Hegedüs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            László Hegedüs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              An adapter for Phoenix Pubsub based on EventStore
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="László Hegedüs" class="md-nav__button md-logo" aria-label="László Hegedüs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    László Hegedüs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Blog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contact/" class="md-nav__link">
+        Contact
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#phoenixpubsubadapter-in-a-nutshell" class="md-nav__link">
+    Phoenix.PubSub.Adapter in a nutshell
+  </a>
+  
+    <nav class="md-nav" aria-label="Phoenix.PubSub.Adapter in a nutshell">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-name" class="md-nav__link">
+    Node name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#child-spec" class="md-nav__link">
+    Child spec
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broadcast" class="md-nav__link">
+    Broadcast
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-broadcast" class="md-nav__link">
+    Direct Broadcast
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eventstore-adapter" class="md-nav__link">
+    EventStore adapter
+  </a>
+  
+    <nav class="md-nav" aria-label="EventStore adapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phoenixpubsub" class="md-nav__link">
+    Phoenix.PubSub
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-implementation" class="md-nav__link">
+    The implementation
+  </a>
+  
+    <nav class="md-nav" aria-label="The implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#distributing-a-message-as-an-event" class="md-nav__link">
+    Distributing a message as an event
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handling-events-local-distribution" class="md-nav__link">
+    Handling events, local distribution
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="an-adapter-for-phoenix-pubsub-based-on-eventstore">An adapter for Phoenix Pubsub based on EventStore</h1>
+<p><code>2020-05-15</code></p>
+<p>(First appeared on the <a href="https://www.erlang-solutions.com/blog/how-to-write-a-phoenix-pubsub-adapter-tutorial-example-based-on-eventstore.html">ErlangSolutions blog</a>.)</p>
+<p>In distributed systems there usually is a need for asynchronous transmission of messages to one or more services or processes. If you have used Phoenix you might have discovered that it provides a flexible way of solving this problem through a built-in pubsub framework called <a href="https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html">Phoenix PubSub</a>. It currently officially supports pubsub based on PG2 and Redis. It uses so called adapters to provide a pluggable interface for different pubsub implementations.</p>
+<p>In this blog post I am going to show you the main steps of implementing an adapter for Phoenix PubSub. We are going to use the latest published release, namely 2.0.0 which includes some improvements and is easier to use than the previous versions.</p>
+<p>A full implementation of the adapter which we will base on <a href="https://hexdocs.pm/eventstore/EventStore.html">EventStore</a> can be found on Github at <a href="https://github.com/laszlohegedus/phoenix_pubsub_eventstore">laszlohegedus/phoenix_pubsub_eventstore</a>. The code discussed in this post is available on the master branch, while a version that works with phoenix_pubsub 1.1.2 is on branch v1.1.</p>
+<h2 id="phoenixpubsubadapter-in-a-nutshell">Phoenix.PubSub.Adapter in a nutshell</h2>
+<p>A Phoenix PubSub adapter has to implement a few callbacks that are specified in the behaviour <code>Phoenix.PubSub.Adapter</code>:</p>
+<ul>
+<li><code>node_name(adapter_name)</code></li>
+<li><code>child_spec(keyword)</code></li>
+<li><code>broadcast(adapter_name, topic, message, dispatcher)</code></li>
+<li><code>direct_broadcast(adapter_name, node_name, topic, message, dispatcher)</code></li>
+</ul>
+<h3 id="node-name">Node name</h3>
+<p>This function should return the node name as an atom or a binary. I did not discover too many uses of it, apart from the module <code>Phoenix.Tracker</code> and its implementations.</p>
+<p>In most cases the following implementation should suffice:</p>
+<pre><code class="language-elixir">def node_name(nil), do: node()
+def node_name(configured_name), do: configured_name
+</code></pre>
+<h3 id="child-spec">Child spec</h3>
+<p>This function is used to generate the child spec for our adapter. Note that each GenServer comes with a default implementation of it, so it is usually not necessary to overwrite.</p>
+<h3 id="broadcast">Broadcast</h3>
+<p>The function <code>broadcast</code> is called when a message is broadcasted through <code>Phoenix.PubSub.broadcast</code>. The first paramater <code>adapter_name</code> is derived from the name we specify for the PubSub. We set the name (as an atom or module name) of the PubSub system when we initialize it. Note that the name of the PubSub is treated as a valid (not necessarily existing) module name, so it is better to follow the corresponding naming convention. The name of the adapter will come from the PubSub name with the suffix <code>.Adapter</code> added.</p>
+<p>The <code>topic</code> and <code>message</code> parameters are self explanatory. The <code>dispatcher</code> is a module that is responsible for the local delivery of messages. It implements a <code>dispatch/3</code> function that will forward the messages to the subscribed processes.</p>
+<h3 id="direct-broadcast">Direct Broadcast</h3>
+<p>It is similar to <code>broadcast</code> with an additional <code>node_name</code> parameter. When <code>direct_broadcast</code> is called, the message should only be broadcasted to subscribers on a given node.</p>
+<h2 id="eventstore-adapter">EventStore adapter</h2>
+<p>We will walk through a possible implementation of a Phoenix PubSub adapter that uses EventStore to distribute the messages between nodes. This gives us a solution that does not depend on Erlang/Elixir distribution. Additionally, we'll have an event log stored in case further analysis is needed.</p>
+<p>Note that I did not perform any load tests on this solution and it is not production-ready, mainly a proof of concept and an aid for demonstration.</p>
+<p>I mentioned above that we are going to use the latest master of <a href="https://github.com/phoenixframework/phoenix_pubsub">phoenixframework/phoenix_pubsub</a> since it is cleaner and easier to use than the previous versions.</p>
+<h3 id="phoenixpubsub">Phoenix.PubSub</h3>
+<p>In order to know how our adapter should work, it is worth looking into the code of the module <code>Phoenix.Pubsub</code>. It is well documented and clean, so it doesn't take too long to understand what each function does.</p>
+<p>The latest master version of Phoenix Pubsub makes use of <a href="https://hexdocs.pm/elixir/Registry.html">Registry</a>. Each subscription is an entry under the corresponding key in the registry associated with our PubSub adapter. That is, when we call <code>Phoenix.PubSub.subscribe(pubsub, topic, opts \\ [])</code>, a new entry is added to the registry with <code>Registry.register(pubsub, topic, opts[:metadata])</code>.</p>
+<p>Duplicate subscriptions are allowed, but they will lead to duplicate deliveries of messages. Unsubscribing from a topic removes all entries for the process under that topic.</p>
+<p>The main functionality we are going to deal with is <code>Phoenix.Pubsub.broadcast</code> and the similar <code>Phoenix.Pubsub.direct_broadcast</code>. Whenever these functions are called, two main things happen:</p>
+<ul>
+<li>The <code>broadcast</code> or <code>direct_broadcast</code> function is called on the corresponding PubSub adapter and</li>
+<li>if successful, the message is dispatched to local processes through the default or overridden dispatch method.</li>
+</ul>
+<p>This means that the main goal of our adapter's <code>broadcast</code> function is to make sure that the message will get delivered to other nodes. In case of a <code>direct_broadcast</code> the message should be received only by the subscribers on the given node and not others.</p>
+<h3 id="the-implementation">The implementation</h3>
+<p>Initially, we create a GenServer called <code>Phoenix.PubSub.EventStore</code> to be able to easily stitch it in the PubSub supervision tree. We want to give the user the flexibility to specify what EventStore to use, so we will expose an <code>eventstore</code> option to pass the desired EventStore module to the PubSub. We are going to store this in the state among with the name of the current instance of the pubsub adapter (the option <code>name</code> in the pubsub config). We will need both in the future.</p>
+<p>In order to use our PubSub we have to add it to our supervision tree. This can be done as follows:</p>
+<pre><code class="language-elixir">{Phoenix.PubSub,
+  [name: MyApp.PubSub,
+   adapter: Phoenix.PubSub.EventStore,
+   eventstore: MyApp.EventStore]
+}
+</code></pre>
+<p>Then storing the desired values can be done in the GenServer's <code>init</code> callback:</p>
+<pre><code class="language-elixir">defmodule Phoenix.PubSub.EventStore do
+  @behaviour Phoenix.PubSub.Adapter
+  use GenServer
+
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts, name: opts[:adapter_name])
+  end
+
+  def init(opts) do
+    {:ok,
+     %{
+       eventstore: opts[:eventstore],
+       pubsub_name: opts[:name]
+     }}
+  end
+  #... implementation will come here ...#
+end
+</code></pre>
+<p>Note the difference between <code>opts[:name]</code> and <code>opts[:adapter_name]</code>. The former is the name of the PubSub as a whole and is reserved for the Registry. Publishers use it when broadcasting messages. We can use <code>opts[:adapter_name]</code> as the name of our GenServer.</p>
+<p>The implementation is fairly simple. We have to make sure that our adapter can be used to broadcast messages to all subscribers. For this we will make use of the event store.</p>
+<h4 id="distributing-a-message-as-an-event">Distributing a message as an event</h4>
+<p>The first thing our GenServer has to do is append a new message to the event store when <code>broadcast/4</code> is called.</p>
+<pre><code class="language-elixir">def broadcast(server, topic, message, dispatcher) do
+  GenServer.call(server, {:broadcast, topic, message})
+end
+
+def handle_call(
+      {:broadcast, topic, message},
+      _from_pid,
+      %{eventstore: eventstore} = state
+    ) do
+  event = %EventStore.EventData{...}
+
+  res = eventstore.append_to_stream(topic, :any_version, [event])
+
+  {:reply, res, state}
+end
+</code></pre>
+<p>This is where we have to decide how we want to wrap the message inside an <code>%EventStore.EventData{}</code> struct. An easy solution is to just serialize the message as one field. For this we'll have to introduce a struct that will hold this field:</p>
+<pre><code class="language-elixir">defmodule Phoenix.PubSub.EventStore.Data do
+  defstruct [:payload]
+end
+</code></pre>
+<p>Then our message can be written as:</p>
+<pre><code class="language-elixir">event = %EventStore.EventData{
+  event_type: &quot;Elixir.Phoenix.PubSub.EventStore.Data&quot;,
+  data: %Phoenix.PubSub.EventStore.Data{
+    payload: Base.encode64(:erlang.term_to_binary(message))
+  }
+}
+</code></pre>
+<p>Note that EventStore converts the data to JSON and if we only used <code>:erlang.term_to_binary</code> then we would likely have invalid JSONs, so an additional base64 encoding is done. You may wonder why we need to convert the payload to a binary. This is needed because JSON cannot differentiate between atoms and strings, so each atom would appear as a string in the published message. If we want consistency, we have to make sure to serialize and deserialize the payload.</p>
+<p>Another way to partially solve this would be to force the user to use structs when sending messages. That way EventStore would be able to do ser-des. Note that the keys remain atoms, but any value that was originally an atom will be converted to a string, so some post processing is still required.</p>
+<p>Unless the messages are huge the base64 encoded binary should suffice.</p>
+<h4 id="handling-events-local-distribution">Handling events, local distribution</h4>
+<p>Now that the events are in the event store, any process that is subscribed to corresponding topics will receive them. First we have to make sure that our GenServer (<code>Phoenix.PubSub.EventStore</code>) subscribes to all topics (<code>"$all"</code>). If you also want to use an event store for a different purpose, it's best to have a separate one for pubsub. We can easily do the subscription by sending a message to <code>self()</code>, then handling it in <code>handle_info</code> right after the server starts.</p>
+<pre><code class="language-elixir">def init(opts) do
+  send(self(), :subscribe)
+
+  {:ok,
+   %{
+     eventstore: opts[:eventstore],
+     pubsub_name: opts[:name]
+   }}
+end
+
+#...#
+
+def handle_info(:subscribe, %{eventstore: eventstore} = state) do
+  eventstore.subscribe(&quot;$all&quot;)
+
+  {:noreply, state}
+end
+
+def handle_info({:subscribed, _subscription}, state), do: {:noreply, state}
+</code></pre>
+<p>We use a transient subscription, because we do not care about previous messages. The event store will reply with a <code>{:subscribed, subscription}</code> message, which we'll also have to handle. After this the server will start receiving <code>{:events, events}</code> messages.</p>
+<p>Note that when a message is broadcast on a node, then it will be distributed to local subscribers by <code>Phoenix.PubSub</code> right after our adapter returns from <code>broadcast/4</code> as seen in the implementation:</p>
+<pre><code class="language-elixir"># from Phoenix.PubSub #
+def broadcast(pubsub, topic, message, dispatcher \\ __MODULE__)
+    when is_atom(pubsub) and is_binary(topic) and is_atom(dispatcher) do
+  {:ok, {adapter, name}} = Registry.meta(pubsub, :pubsub)
+
+  with :ok &lt;- adapter.broadcast(name, topic, message, dispatcher) do
+    dispatch(pubsub, :none, topic, message, dispatcher)
+  end
+end
+</code></pre>
+<p>So we have to make sure that a local message is not dispatched twice. For that we can add a unique ID (I went with <code>UUID.uuid1()</code>) to the process state:</p>
+<pre><code class="language-elixir">def init(opts) do
+  send(self(), :subscribe)
+
+  {:ok,
+   %{
+     id: UUID.uuid1(),
+     eventstore: opts[:eventstore],
+     pubsub_name: opts[:name]
+   }}
+end
+</code></pre>
+<p>Now, we can just add the <code>id</code> to the event before publishing it into the event store. I chose to put it in the <code>metadata</code> field, but we could wrap it inside <code>data</code>. Although it's best to keep this information separate from the actual message. Finally, we'll have to change the <code>handle_call</code> for <code>:broadcast</code> and add the <code>id</code> to the event:</p>
+<pre><code class="language-elixir">event = %EventStore.EventData{
+  event_type: &quot;Elixir.Phoenix.PubSub.EventStore.Data&quot;,
+  data: %Phoenix.PubSub.EventStore.Data{
+    payload: Base.encode64(:erlang.term_to_binary(message))
+  }
+  metadata: %{source: id}
+}
+</code></pre>
+<p>Where the value of <code>id</code> comes from the state. Now when we recive an event we know where it came from and we can decide whether it is needed to be dispatched to local subscribers.</p>
+<pre><code class="language-elixir">def handle_info({:events, events}, state) do
+  Enum.each(events, &amp;local_broadcast_event(&amp;1, state))
+
+  {:noreply, state}
+end
+
+defp local_broadcast_event(
+       %EventStore.RecordedEvent{
+         event_type: &quot;Elixir.Phoenix.PubSub.EventStore.Data&quot;,
+         data: %Phoenix.PubSub.EventStore.Data{
+           payload: payload
+         },
+         metadata: metadata,
+         stream_uuid: topic
+       },
+       %{id: id, pubsub_name: pubsub_name} = _state
+     ) do
+  case metadata do
+    %{&quot;source&quot; =&gt; ^id} -&gt;
+      # This node is the source, nothing to do, because local dispatch already
+      # happened.
+      :ok
+
+    _not_local -&gt;
+      # Otherwise broadcast locally
+      message = :erlang.binary_to_term(Base.decode64(payload))
+
+      Phoenix.PubSub.local_broadcast(
+        pubsub_name,
+        topic,
+        message
+      )
+  end
+end
+</code></pre>
+<p>That's it. This should give us enough to have a simple implementation of Phoenix Pubsub using EventStore. Note that the implementation of direct broadcast is still missing, which I solved by adding the destination node to the metadata field and extending the function <code>local_broadcast_event</code> to handle it. I also added support for handling the <code>dispatch</code> field during broadcasts.</p>
+<p>For my complete implementation consult <a href="https://github.com/laszlohegedus/phoenix_pubsub_eventstore">laszlohegedus/phoenix_pubsub_eventstore</a>.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ddd52ceb.min.js"></script>
+      
+        <script src="../../js/prism.js"></script>
+      
+    
+  </body>
+</html>

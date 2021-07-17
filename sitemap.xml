@@ -2,22 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://laszlohegedus.com/</loc>
-         <lastmod>2021-07-16</lastmod>
+         <lastmod>2021-07-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laszlohegedus.com/blog/</loc>
-         <lastmod>2021-07-16</lastmod>
+         <lastmod>2021-07-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laszlohegedus.com/contact/</loc>
-         <lastmod>2021-07-16</lastmod>
+         <lastmod>2021-07-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://laszlohegedus.com/blog/01_consuming_and_processing_rabbitmq_messages_with_broadway/</loc>
-         <lastmod>2021-07-16</lastmod>
+         <loc>https://laszlohegedus.com/blog/001_consuming_and_processing_rabbitmq_messages_with_broadway/</loc>
+         <lastmod>2021-07-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://laszlohegedus.com/blog/002_optimizing_graphql_with_dataloader/</loc>
+         <lastmod>2021-07-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://laszlohegedus.com/blog/003_an_adapter_for_phoenix_pubsub_based_on_eventstore/</loc>
+         <lastmod>2021-07-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

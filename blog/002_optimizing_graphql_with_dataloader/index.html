@@ -1,0 +1,641 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://laszlohegedus.com/blog/002_optimizing_graphql_with_dataloader/">
+      
+      <link rel="icon" href="../../images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.10">
+    
+    
+      
+        <title>Optimizing GraphQL with Dataloader - László Hegedüs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.1fe995fd.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.f1a3b89f.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../css/prism.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#optimizing-graphql-with-dataloader" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="László Hegedüs" class="md-header__button md-logo" aria-label="László Hegedüs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            László Hegedüs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Optimizing GraphQL with Dataloader
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="László Hegedüs" class="md-nav__button md-logo" aria-label="László Hegedüs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    László Hegedüs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Blog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contact/" class="md-nav__link">
+        Contact
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-dataloader-in-a-nutshell" class="md-nav__link">
+    What is Dataloader in a nutshell?
+  </a>
+  
+    <nav class="md-nav" aria-label="What is Dataloader in a nutshell?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataloader-in-elixir" class="md-nav__link">
+    Dataloader in Elixir
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-dataloader-in-absinthe-resolvers" class="md-nav__link">
+    Using Dataloader in Absinthe Resolvers
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Dataloader in Absinthe Resolvers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-dataloader" class="md-nav__link">
+    Adding Dataloader
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-query-function" class="md-nav__link">
+    The query function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataloaderkv" class="md-nav__link">
+    Dataloader.KV
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#more-control-over-dataloader" class="md-nav__link">
+    More control over dataloader
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="optimizing-graphql-with-dataloader">Optimizing GraphQL with Dataloader</h1>
+<p><code>2020-04-01</code></p>
+<p>(First appeared on the <a href="https://www.erlang-solutions.com/blog/optimizing-graphql-with-dataloader.html">ErlangSolutions blog</a>.)</p>
+<p>I spent the last fourteen months working with a client on mobility applications. We developed several parts of the backend of a corporate car sharing platform and built an application from scratch to conduct and analyze test drives at dealerships around the World. Development of the former was already started before we got there, so the tech stack was pretty much decided. We developed a handful of services exposing GraphQL APIs. I think <a href="https://elixir-lang.org/">Elixir</a> was the right fit for this purpose. Using the <a href="https://hexdocs.pm/absinthe/overview.html">Absinthe</a> library to craft the APIs was a good choice. However, multiple services had to communicate with each-other and making a responsive UI requires optimized queries whenever possible. We did our best and learned from our mistakes.</p>
+<p>When we started working on the second application, we had more flexibility in choosing the tools. We decided to stick with a GraphQL API and used Absinthe, but paid attention to how we write the resolver functions. In the end our API was blazing fast, because most of our resolvers ran only a handful of queries.</p>
+<p>Designing a usable API is art, as is optimizing the backend that serves that API. In this blog post - and hopefully some upcoming ones - I'll give you a few hints on what to avoid or what to strive for when working with Absinthe. We cannot always affect how other applications/services work, but we can do our best to make our service as fast as possible.</p>
+<p>There are plenty of resources out there to help you get started with Absinthe and the number of tutorials on how to use <a href="https://hexdocs.pm/dataloader/Dataloader.html">Dataloader</a> are growing, but it is a recurring topic on Slack. I hope to give you an insight on how it works and how you can make use of it in your project.</p>
+<h2 id="what-is-dataloader-in-a-nutshell">What is Dataloader in a nutshell?</h2>
+<p>In short, Dataloader is a tool that can help your application fetch data in an optimal way by implementing batching and caching.</p>
+<h3 id="dataloader-in-elixir">Dataloader in Elixir</h3>
+<p>In the Elixir world it is provided by a <a href="https://hex.pm/packages/dataloader">library</a> and integrates well with Ecto and Absinthe. Note that it's not a silver bullet, your queries using Dataloader rely on the optimal implementation of the underlying library for the specific datasource.</p>
+<p>We are not going into details on how to use Dataloader on its own. Please consult the <a href="https://hexdocs.pm/dataloader/Dataloader.html">official documentation</a> for that.</p>
+<p>Instead, let's dive into using Dataloader in Absinthe.</p>
+<h2 id="using-dataloader-in-absinthe-resolvers">Using Dataloader in Absinthe Resolvers</h2>
+<p>For the examples we are going to use rather simple schemas in order to not get lost in the details. Assume we are building a database where we keep track of companies and their employees. One employee belongs to exactly one company, but each company may have multiple employees. The Ecto schemas may be defined as:</p>
+<pre><code class="language-elixir">schema &quot;employees&quot; do
+  field(:name, :string)
+  field(:email, :string)
+  belongs_to(:company, Company)
+end
+
+schema &quot;companies&quot; do
+  field(:name, :string)
+  has_many(:employees, Employee)
+end
+</code></pre>
+<p>And the corresponding object definitions in Absinthe GraphQL may look like:</p>
+<pre><code class="language-elixir">object(:employee) do
+  field(:id, non_null(:string))
+  field(:name, non_null(:string))
+  field(:email, non_null(:string))
+end
+
+object(:company) do
+  field(:id, non_null(:string))
+  field(:name, non_null(:string))
+end
+</code></pre>
+<p>This is all good until we want to resolve the employees on the company. A naïve field definition of it may be:</p>
+<pre><code class="language-elixir">object(:company) do
+  field(:id, non_null(:string))
+  field(:name, non_null(:string))
+
+  field :employees, non_null(list_of(:employee)) do
+    resolve(fn company, _args, _info -&gt;
+      employees = Ecto.assoc(company, :employees) |&gt; Repo.all()
+
+      {:ok, employees}
+    end)
+  end
+end
+</code></pre>
+<p>Similarly, we can add the field <code>:company</code> to the employee object as:</p>
+<pre><code class="language-elixir">field(:company, non_null(:company)) do
+  resolve(fn employee, _args, _info -&gt;
+    company = Ecto.assoc(employee, :company) |&gt; Repo.one()
+
+    {:ok, company}
+  end)
+end
+</code></pre>
+<p>If we now query a company through GraphQL and also ask for the employees on that field, then our backend will perform two SQL queries. This is not bad at all, but imagine the case where we have ten employee results. Moreover, each result asks for its own company field which causes several duplicate queries to Ecto.</p>
+<pre><code class="language-graphql">query($id: ID!) {
+  company(id: $id) {
+    id
+    name
+    employees {
+      id
+      name
+      company {
+        id
+        name
+      }
+    }
+  }
+}
+</code></pre>
+<p>This may not happen in this exact form, but it helps us imagine what happens when the same associated object has to be resolved for a list of results. We have to make several queries to Ecto for this to be answered. One query to resolve the company in the root, one query for each employee and one additional query for resolving the company of each employee. 21 queries overall, we're facing the infamous n+1 problem. This is where Dataloader comes to the rescue.</p>
+<h3 id="adding-dataloader">Adding Dataloader</h3>
+<p>The documentation of <a href="https://hexdocs.pm/absinthe/ecto.html#dataloader">Absinthe</a> is a good starting point for using Dataloader with an Ecto data source. In short, if we want to use Dataloader in our resolvers we have to do two things:
+- Add a dataloader struct to the resolution context
+- Add <code>Absinthe.Middleware.Dataloader</code> to the list of plugins in our schema</p>
+<p>We can create a dataloader struct with <code>Dataloader.new/1</code>. After that, we'll have to add sources to dataloader with <code>Dataloader.add_source/3</code>. If we have an Ecto repository (let's call it <code>Repo</code>), we can add it as follows:</p>
+<pre><code class="language-elixir">def context(ctx) do
+  loader =
+    Dataloader.new()
+    |&gt; Dataloader.add_source(Repo, Dataloader.Ecto.new(Repo))
+
+  Map.put(ctx, :loader, loader)
+end
+</code></pre>
+<p>Let's not forget to add the Dataloader plugin:</p>
+<pre><code class="language-elixir">def plugins() do
+  [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults()]
+end
+</code></pre>
+<p>Absinthe provides a convenient way for using Dataloader in our resolvers. We just have to import <code>Absinthe.Resolution.Helpers</code> in our schema and we can use the <code>dataloader/1</code> function to resolve fields using the <code>Repo</code> datasource. Our Absinthe object definitions become:</p>
+<pre><code class="language-elixir">object(:employee) do
+  field(:id, non_null(:string))
+  field(:name, non_null(:string))
+  field(:email, non_null(:string))
+
+  field(:company, non_null(:company)) do
+    resolve(dataloader(Repo))
+  end
+end
+
+object(:company) do
+  field(:id, non_null(:string))
+  field(:name, non_null(:string))
+
+  field(:employees, non_null(list_of(:employee))) do
+    resolve(dataloader(Repo))
+  end
+end
+</code></pre>
+<p>With these modifications, resolving the graphql query above requires only three Ecto queries. That is a significant improvement.</p>
+<h3 id="the-query-function">The query function</h3>
+<p>One useful feature of the <code>Dataloader.Ecto</code> source is that we can pass a query function to it which can be used for filtering or processing parameters that are common to many fields, for example, pagination arguments.</p>
+<pre><code class="language-elixir">def context(ctx) do
+  loader =
+    Dataloader.new()
+    |&gt; Dataloader.add_source(Repo, Dataloader.Ecto.new(Repo, query: &amp;Repo.dataloader_query/2))
+
+  Map.put(ctx, :loader, loader)
+end
+</code></pre>
+<p>Where we can define <code>Repo.dataloader_query/2</code> to process parameters related to pagination and also leave room for extending it easily.</p>
+<pre><code class="language-elixir">def dataloader_query(queryable, params) do
+  queryable
+  |&gt; paginate(params[:paginate])
+end
+
+def paginate(query, nil), do: query
+
+def paginate(query, params) do
+  from d in query,
+    limit: ^params[:limit],
+    offset: ^params[:offset]
+end
+</code></pre>
+<p>Note that so far we didn't have to write any Ecto queries, because we used the <code>dataloader/1</code> helper from <code>Absinthe.Resolution.Helpers</code>.</p>
+<p>Unfortunately we're not done yet. Assume we added the <code>paginate</code> parameter to the <code>employees</code> field on the <code>company</code> object.</p>
+<pre><code class="language-elixir">object(:company) do
+  field(:id, non_null(:string))
+  field(:name, non_null(:string))
+
+  field(:employees, non_null(list_of(:employee))) do
+    arg(:paginate, :pagination_input)
+
+    resolve(dataloader(Repo))
+  end
+end
+</code></pre>
+<p>This will work, if we only have one company, but as soon as we make two <code>company</code> queries with the same pagination paremeter (for example, <code>{"paginate": {"limit": 10, "offset": 0}}</code>) for the <code>employees</code> in one single GraphQL query, we'll see an anomaly.</p>
+<pre><code class="language-elixir">query($id1: ID!, $id2: ID!, $paginate: PaginationInput) {
+  res1: company(id: $id1) {
+    id
+    name
+    employees(paginate: $paginate) {
+      id
+      name
+    }
+  }
+  res2: company(id: $id2) {
+    id
+    name
+    employees(paginate: $paginate) {
+      id
+      name
+    }
+  }
+}
+</code></pre>
+<p>We only see employees for one of the companies, while the list of employees for the other one is empty. This happens, because the Ecto Dataloader tries to fetch the employees for both companies with a single query that includes an <code>order_by</code> on the <code>company_id</code> field. This works well when we don't want to add any <code>limit</code> or <code>offset</code> parameters. One workaround for this is to modify the argument list, which will force the loader to make separate queries for each company.</p>
+<pre><code class="language-elixir">field(:employees, non_null(list_of(:employee))) do
+  arg(:paginate, :pagination_input)
+
+  resolve(
+    dataloader(Repo, fn company, args, _info -&gt;
+      {:employees, Map.put(args, :company_id, company.id)}
+    end)
+  )
+end
+</code></pre>
+<p>Here we made use of a dataloader key function that should return a resource (<code>:employees</code> in this case) and a list of arguments that are passed on to our <code>Repo.dataloader_query/2</code> function. Since <code>:company_id</code> is different for the two companies, the keys for the dataloader cache will be different. One limitation of this solution is that Dataloader will have to make separate Ecto queries for each company. If this causes performance issues, then regular resolvers or rather batch resolvers may be implemented with optimal queries.</p>
+<p>The query function is also useful if we want to have more flexibility, for example, filtering or ordering results. For this, we'll have to extend our query function to process extra parameters. In general, I like to write query helpers that take a queryable object as their first parameter and return a queryable. For example (assuming we have a status field on the employee):</p>
+<pre><code class="language-elixir">def where_active(employee) do
+  from e in employee,
+    where: e.status == &quot;active&quot;
+end
+</code></pre>
+<p>If we extend the query function (<code>Repo.dataloader_query/2</code>) as below, we will be able to use these helpers easily:</p>
+<pre><code class="language-elixir">def dataloader_query(queryable, params) do
+  queryable
+  |&gt; paginate(params[:paginate])
+  |&gt; apply_query(params[:query], params[:query_args] || [])
+end
+
+def apply_query(queryable, nil, _query_args), do: queryable
+
+def apply_query(queryable, query, query_args) do
+  apply(query, [queryable | query_args])
+end
+</code></pre>
+<p>And we can now resolve only active employees on companies if we specify <code>query</code> in the resolver:</p>
+<pre><code class="language-elixir">field(:employees, non_null(list_of(:employee))) do
+  arg(:paginate, :pagination_input)
+
+  resolve(
+    dataloader(Repo, fn company, args, _info -&gt;
+      args =
+        args
+        |&gt; Map.put(:company_id, company.id)
+        |&gt; Map.put(:query, &amp;Blog.Dataloader.Employee.Query.where_active/1)
+
+      {:employees, args}
+    end)
+  )
+end
+</code></pre>
+<p>Of course other filtering is also possible and we can also construct our queries based on the GraphQL parameters that the resolver receives in <code>args</code>.</p>
+<p>Note that now <code>:query</code> becomes part of the key that is used in the dataloader cache, so querying the active and non-active employees of the same company in one GraphQL query might require two database queries.</p>
+<h3 id="dataloaderkv">Dataloader.KV</h3>
+<p>So far we have only seen examples on how to use <code>Dataloader.Ecto</code>. What if we need to collect some data from another service in order to respond to the GraphQL query? We can use <code>Dataloader.KV</code> to retrieve and cache data based on keys.</p>
+<p>For this we will need a function that receives two parameters. The first parameter is a batch key that groups together different objects. We will return to this shortly. The second parameter is a list, usually a list of objects or IDs to which the required data is to be retrieved. The function should return a map where the keys are the elements of this list and the associated values are the corresponding retrieved data. For example, if we store the addresses of employees in a different service, we may write a loader function as below:</p>
+<pre><code class="language-elixir">def fetch_addresses(_batch_key, employees) do
+  ids = Enum.map(employees, &amp; &amp;1.id)
+
+  results = call_to_another_service(ids)
+
+  employees
+  |&gt; Map.new(&amp;{&amp;1, lookup_result_for_employee(&amp;1, results)})
+end
+</code></pre>
+<p>This function receives a list of employees and returns a map where each employee is mapped to an address. How the call to another service and the lookup are done are implementation details, but in order for the solution to be optimal the other service should support querying data in batches (for all IDs at once instead of one-by-one).</p>
+<p>To use this function as a load function for a <code>Dataloader.KV</code> source we may change the context function in the schema as follows.</p>
+<pre><code class="language-elixir">def context(ctx) do
+  loader =
+    Dataloader.new()
+    |&gt; Dataloader.add_source(Repo, Dataloader.Ecto.new(Repo, query: &amp;Repo.dataloader_query/2))
+    |&gt; Dataloader.add_source(:address, Dataloader.KV.new(&amp;Address.fetch_addresses/2))
+
+  Map.put(ctx, :loader, loader)
+end
+</code></pre>
+<p>Then we can resolve the address field for each employee using the <code>:address</code> dataloader source:</p>
+<pre><code class="language-elixir">object(:employee) do
+  # ... existing fields here
+
+  field(:address, non_null(:string)) do
+    resolve(dataloader(:address))
+  end
+end
+</code></pre>
+<p>As you can see, we did not use the batch key in our loader, which means we will handle all employees in one batch. This is usually fine. Batch key can be useful, if we intend to pass on certain arguments to the other service or refine the results. Perhaps we have a user token that we intend to supply for the service to check whether the user has the required access rights:</p>
+<pre><code class="language-elixir">object(:employee) do
+  # ... existing fields here
+
+  field(:address, non_null(:string)) do
+    resolve(
+      dataloader(:address, fn _employee, _args, %{context: %{user_token: token}} -&gt;
+        {:address, %{user_token: token}}
+      end)
+    )
+  end
+end
+</code></pre>
+<p>Then make the load function handle the additional arguments:</p>
+<pre><code class="language-elixir">def fetch_addresses({:address, %{user_token: _token} = args}, employees) do
+  ids = Enum.map(employees, &amp; &amp;1.id)
+  results = call_to_another_service(ids, args)
+
+  employees
+  |&gt; Map.new(&amp;{&amp;1, lookup_result_for_employee(&amp;1, results)})
+end
+</code></pre>
+<p>Note that for each different batch key we have to make a call to the other service, so we have to be careful when specifying the arguments. For example, if we pass in a unique ID (e.g., <code>employee.id</code>), then we lose the advantage of batching, the function is called for each employee.</p>
+<p>In general, constructing the batch key provides flexibility, but it can also hide important details in the code. Use with caution.</p>
+<h3 id="more-control-over-dataloader">More control over dataloader</h3>
+<p>In some cases we may want to have more control over how we want to handle loading and post processing data. In <code>Absinthe.Resolution.Helpers</code> there's an <code>on_load/2</code> function that takes a dataloader struct and a callback. It is useful when we have to obtain information that relies on data that can be retrieved by dataloader. The following example is not likely to appear in a real world scenario, but it demonstrates how we can make use of the <code>on_load</code> function :</p>
+<pre><code class="language-elixir">object(:company) do
+  # ... other fields here
+  field(:number_of_distinct_addresses_of_employees, non_null(:integer)) do
+    resolve(fn company, _args, %{context: %{loader: loader}} -&gt;
+      loader
+      |&gt; Dataloader.load(Repo, :employees, company)
+      |&gt; on_load(fn loader_with_employees -&gt;
+        employees = Dataloader.get(loader_with_employees, Repo, :employees, company)
+
+        loader_with_employees
+        |&gt; Dataloader.load_many(:address, %{}, employees)
+        |&gt; on_load(fn loader_with_addresses -&gt;
+          addresses = Dataloader.get_many(loader_with_addresses, :address, %{}, employees)
+
+          {:ok, length(Enum.uniq(addresses))}
+        end)
+      end)
+    end)
+  end
+end
+</code></pre>
+<p>Notice how we took advantage of the fact that we can embed <code>on_load</code> calls to optimize fetching the results. First we tell dataloader to load the employees, then we use those employees to load their addresses. Finally, we fetch the addresses and count how many unique ones there are.</p>
+<p>In general this kind of resolver is useful when we want to move data one (or more) level up the tree with or without aggregation. In one project I used the same solution to retrieve telematics data of vehicles to be aggregated and displayed on certain trips taken with those vehicles. Both the vehicles and telematics data needed to be queried from other services.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Dataloader is a poverful tool when it comes to optimizing queries, but we have to be aware of its limitations. We saw a few simple examples to get up and running with Dataloader and Absinthe. This is only the tip of the iceberg and I am hoping to follow up with some more advanced tricks and tips.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ddd52ceb.min.js"></script>
+      
+        <script src="../../js/prism.js"></script>
+      
+    
+  </body>
+</html>
