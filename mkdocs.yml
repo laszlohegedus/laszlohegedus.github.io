@@ -1,0 +1,14 @@
+site_name: László Hegedüs
+site_url: https://laszlohegedus.com/
+plugins: []
+theme:
+  name: material
+  favicon: images/favicon.ico
+nav:
+  - Home: index.md
+  - Blog: blog.md
+  - Contact: contact.md
+extra_css:
+  - css/prism.css
+extra_javascript:
+  - js/prism.js
